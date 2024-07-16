@@ -37,6 +37,7 @@ function addStat(elem, value){
 };
 
 
+
 function paintMovieData(movieReviewData){
     const flatReviewData = movieReviewData.flat();
     const movieListEl = document.querySelector('#movieListId UL');
