@@ -54,8 +54,11 @@ function paintMovieData(movieReviewData){
 
 function registerHandlers(movieReviewData){
     const sortBtn = document.getElementById("srtBtnId");
+    const grpBtn = document.getElementById("grpBtnId")
 
-    sortBtn.addEventListener("click", () => sortByReview(movieReviewData))
+    sortBtn.addEventListener("click", () => sortByReview(movieReviewData));
+
+    grpBtn.addEventListener("click", () => groupByReviewByTitle(movieReviewData))
 }
 
 function sortByReview(movieReviewData){
@@ -71,8 +74,43 @@ function sortByReview(movieReviewData){
 
     removeAllChildNodes(movieListEl);
     addMovieReviewData(movieListEl, sortReviewData);
+};
+
+function groupByReviewByTitle(movieReviewData){
+    //console.log(movieReviewData);
+    const flatReviewData = movieReviewData.flat();
+    const groupedReviews = Object.groupBy(flatReviewData, ({title}) => title);
+
+    const titleKeys = Reflect.ownKeys(groupedReviews);
+    const movieListEl = document.querySelector('#movieListId UL');
+    removeAllChildNodes(movieListEl);
+
+    titleKeys.forEach((title) => {
+        const liEl = document.createElement('li');
+        liEl.classList.add('card', 'my-2');
+
+        const hEl = document.createElement('h2');
+        hEl.classList.add('text-3xl');
+        hEl.innerText = title;
+        liEl.appendChild(hEl);
+
+        const reviews = groupedReviews[title];
+
+        reviews.forEach((review) => {
+            const pEl = document.createElement('p');
+            pEl.classList.add('mx-2', 'my-2');
+
+            const message = `<strong>${review.by}</strong> has given <strong>${review.rating}</strong> rating with a comment, <i>${review.content}</i>`
+
+            pEl.innerHTML = message;
+            liEl.appendChild(pEl)
+        })
+
+        movieListEl.appendChild(liEl)
+    })
 }
 
+    
 function addMovieReviewData(movieListEl, movieReview){
     movieReview.map((movie)=>{
         console.log(movie);
